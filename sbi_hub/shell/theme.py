@@ -223,10 +223,36 @@ _CSS = """
         border-radius: 14px;
         padding: 1.35rem 1.3rem 3rem;
         min-height: 11.4rem;
-        height: 100%;
+        height: calc(100% - 0.9rem);
         box-sizing: border-box;
         margin-bottom: 0.9rem;
         box-shadow: 0 1px 3px rgba(22, 50, 79, 0.06);
+    }
+    /* Equal-height cards — stretch the wrapper chain from the column
+       (flex-stretched to the row height) down to the card element. */
+    [data-testid="stColumn"]:has([class*="st-key-card_"])
+        > [data-testid="stVerticalBlock"],
+    [data-testid="stColumn"]:has([class*="st-key-card_"])
+        > [data-testid="stVerticalBlock"] > [data-testid="stLayoutWrapper"],
+    [class*="st-key-card_"]
+        > [data-testid="stElementContainer"]:has(.sbi-card),
+    [class*="st-key-card_"]
+        > [data-testid="stElementContainer"]:has(.sbi-card) > .stMarkdown,
+    [class*="st-key-card_"]
+        > [data-testid="stElementContainer"]:has(.sbi-card) > .stMarkdown > div,
+    [class*="st-key-card_"]
+        > [data-testid="stElementContainer"]:has(.sbi-card)
+        [data-testid="stMarkdownContainer"] {
+        height: 100%;
+    }
+    /* Keep the absolute-positioned launch link's element container out
+       of the card block's flex layout so card heights stay uniform. */
+    [class*="st-key-card_"] {
+        gap: 0;
+    }
+    [class*="st-key-card_"]
+        > [data-testid="stElementContainer"]:not(:has(.sbi-card)) {
+        display: contents;
     }
     /* Card grid — wrap to two columns on narrower viewports */
     @media (max-width: 1150px) {

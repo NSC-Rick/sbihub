@@ -42,7 +42,10 @@ def _render_card(module, column):
     active = module["status"] == STATUS_ACTIVE
     if featured:
         classes = "sbi-card sbi-card-featured"
-        badge = '<span class="sbi-featured-badge">FEATURED</span>'
+        badge = (
+            '<span class="sbi-featured-badge">'
+            f'{module.get("badge", "FEATURED")}</span>'
+        )
     elif active:
         classes, badge = "sbi-card", ""
     else:

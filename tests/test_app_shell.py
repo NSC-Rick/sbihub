@@ -53,6 +53,17 @@ def test_business_valuation_card_launches_new_tab(app):
     assert any("Opens in a new tab" in v for v in markdown_values)
 
 
+def test_business_valuation_card_is_featured_pilot(app):
+    """The valuation card uses featured styling with a PILOT badge."""
+    markdown_values = [m.value for m in app.markdown]
+    card = next(
+        v for v in markdown_values
+        if "Business Valuation & Succession" in v and 'class="sbi-card' in v
+    )
+    assert "sbi-card-featured" in card
+    assert "sbi-featured-badge" in card and "PILOT" in card
+
+
 def test_no_embedded_open_buttons_on_landing(app):
     """No module currently embeds in the hub shell — no open buttons."""
     assert not [b for b in app.button if b.key.startswith("open_")]

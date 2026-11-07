@@ -64,6 +64,8 @@ MODULES = [
             "ownership transitions."
         ),
         "status": STATUS_ACTIVE,
+        "featured": True,
+        "badge": "PILOT",
         "launch_url": "https://valuation-wesj.onrender.com/",
     },
     {
