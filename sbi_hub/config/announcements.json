@@ -1,10 +1,17 @@
 [
   {
     "title": "Welcome to SBI Hub",
-    "description": "SBI Hub brings small-business advisory tools together in one place. The Financial Modeler is available now; additional modules are in development.",
+    "description": "SBI Hub brings small-business intelligence tools together in one place. The Financial Modeler and Business Valuation modules are available now; additional modules are in development.",
     "date": "2026-11-06",
     "category": "Announcement",
     "pinned": true
+  },
+  {
+    "title": "Business Valuation Now Available",
+    "description": "The Business Valuation & Succession module is live. It opens in a new tab as its own application, independent of the hub.",
+    "date": "2026-11-07",
+    "category": "Release",
+    "pinned": false
   },
   {
     "title": "Financial Modeler Now Integrated",
@@ -15,7 +22,7 @@
   },
   {
     "title": "More Modules on the Way",
-    "description": "Seven additional advisory modules — from feasibility to automation evaluation — are planned for upcoming builds.",
+    "description": "Six additional modules — from feasibility to automation evaluation — are planned for upcoming builds.",
     "date": "2026-11-01",
     "category": "Roadmap",
     "pinned": false

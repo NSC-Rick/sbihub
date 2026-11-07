@@ -2,9 +2,11 @@
 
 *Better Insights. Better Decisions. Stronger Businesses.*
 
-A modular Streamlit application for small-business advisors. Build 1 delivers
-the application shell and integrates the existing **Financial Modeler**
-(Operating Model) as the first operational module.
+A modular Streamlit application for business owners, analysts, consultants,
+and advisors. Build 1 delivers the application shell and integrates the
+existing **Financial Modeler** (Operating Model) as the first operational
+module; **Business Valuation & Succession** launches as an external app in
+a new tab.
 
 ## Modules
 
@@ -12,7 +14,7 @@ the application shell and integrates the existing **Financial Modeler**
 |---|---|
 | Financial Modeler | **Active (Featured)** |
 | Business Idea & Feasibility | Coming Soon |
-| Business Valuation | Coming Soon |
+| Business Valuation | **Active** (external app, new tab) |
 | Workforce & Hiring | Coming Soon |
 | Capital Investment | Coming Soon |
 | Sales & Growth | Coming Soon |

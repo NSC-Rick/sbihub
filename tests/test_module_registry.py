@@ -46,14 +46,17 @@ def test_required_fields_present():
         assert required <= set(module), f"{module['id']} missing fields"
 
 
-def test_exactly_one_active_module():
+def test_active_modules():
     active = [m for m in MODULES if m["status"] == STATUS_ACTIVE]
-    assert [m["id"] for m in active] == ["financial_modeler"]
+    assert [m["id"] for m in active] == [
+        "financial_modeler",
+        "valuation_succession",
+    ]
 
 
 def test_remaining_modules_coming_soon():
     soon = [m for m in MODULES if m["status"] != STATUS_ACTIVE]
-    assert len(soon) == 7
+    assert len(soon) == 6
     assert all(m["status"] == STATUS_COMING_SOON for m in soon)
 
 
@@ -90,3 +93,9 @@ def test_active_modules_have_one_launch_mechanism():
 def test_financial_modeler_launches_standalone_app():
     module = get_module("financial_modeler")
     assert module["launch_url"] == "/fm"
+
+
+def test_business_valuation_launches_external_app():
+    module = get_module("valuation_succession")
+    assert module["status"] == STATUS_ACTIVE
+    assert module["launch_url"].startswith("https://")

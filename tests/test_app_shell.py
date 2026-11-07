@@ -24,7 +24,7 @@ def test_landing_page_renders(app):
     assert not app.exception
 
     markdown_values = [m.value for m in app.markdown]
-    assert any("How can we help your client today?" in v for v in markdown_values)
+    assert any("What would you like to analyze today?" in v for v in markdown_values)
     assert any("Better Insights. Better Decisions. Stronger Businesses." in v for v in markdown_values)
     assert any("Announcements & Updates" in v for v in markdown_values)
 
@@ -34,13 +34,22 @@ def test_landing_page_has_eight_module_cards(app):
     cards = [v for v in markdown_values if 'class="sbi-card' in v]
     assert len(cards) == 8
     assert any("sbi-card-featured" in v for v in cards)
-    assert sum("sbi-card-soon" in v for v in cards) == 7
+    assert sum("sbi-card-soon" in v for v in cards) == 6
 
 
 def test_financial_modeler_card_launches_new_tab(app):
     """The featured card links to the standalone app path in a new tab."""
     markdown_values = [m.value for m in app.markdown]
     assert any('href="/fm" target="_blank"' in v for v in markdown_values)
+    assert any("Opens in a new tab" in v for v in markdown_values)
+
+
+def test_business_valuation_card_launches_new_tab(app):
+    """The valuation card links to its external app in a new tab."""
+    from sbi_hub.config.modules import get_module
+    url = get_module("valuation_succession")["launch_url"]
+    markdown_values = [m.value for m in app.markdown]
+    assert any(f'href="{url}" target="_blank"' in v for v in markdown_values)
     assert any("Opens in a new tab" in v for v in markdown_values)
 
 
@@ -92,6 +101,22 @@ def test_financial_modeler_view_shows_launcher(app):
     assert any("Open Financial Modeler in a new tab" in v for v in markdown_values)
     # The hub chrome is present; the modeler itself is not embedded.
     assert not any("Operating Model" in t.value for t in app.sidebar.title)
+
+
+def test_business_valuation_view_shows_launcher(app):
+    """?view=valuation_succession renders a launcher, not an embedded app."""
+    from sbi_hub.config.modules import get_module
+    url = get_module("valuation_succession")["launch_url"]
+    app.session_state["active_view"] = "valuation_succession"
+    app.run()
+
+    assert not app.exception
+    markdown_values = [m.value for m in app.markdown]
+    assert any(f'href="{url}" target="_blank"' in v for v in markdown_values)
+    assert any(
+        "Open Business Valuation & Succession in a new tab" in v
+        for v in markdown_values
+    )
 
 
 def test_back_to_hub_navigation(app):

@@ -49,11 +49,11 @@ _STAR_HEADER_ART_SVG = """
 BRAND = {
     # ---- Sponsor / organization identity ----
     "org_name": "North Star Consulting",
-    "org_subtitle": "Advisory Platform",
+    "org_subtitle": "Business Intelligence Platform",
     "logo_svg": _STAR_LOGO_SVG,
     # ---- Product identity ----
     "product_name": "Small Business Intelligence Hub",
-    "product_subtitle": "Advisor Workspace",
+    "product_subtitle": "Business Intelligence Workspace",
     "app_title": "SBI Hub — North Star Consulting",
     "page_icon": "⭐",
     "tagline": "Better Insights. Better Decisions. Stronger Businesses.",

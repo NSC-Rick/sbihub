@@ -1,9 +1,9 @@
 """
 SBI Hub — Small Business Intelligence Hub.
 
-Application shell entry point. Owns page configuration, the advisor-workspace
+Application shell entry point. Owns page configuration, the workspace
 sidebar, and routing between the landing page, workspace views, and
-specialized advisory modules.
+specialized modules.
 
 Navigation is session-state based: sidebar nav buttons and embedded
 module-card controls update ``st.session_state.active_view`` inside a

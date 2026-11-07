@@ -1,7 +1,7 @@
 """
 SBI Hub landing page.
 
-Renders the advisor-workspace header, the welcome heading, the module
+Renders the workspace header, the welcome heading, the module
 card grid (featured Financial Modeler plus upcoming modules), the
 announcements panel, and the footer tagline.
 
@@ -21,10 +21,10 @@ from sbi_hub.shell.icons import icon
 def _render_welcome():
     st.markdown(
         '<div class="sbi-welcome">'
-        "<h2>How can we help your client today?</h2>"
+        "<h2>What would you like to analyze today?</h2>"
         '<p class="sbi-welcome-sub">'
-        "A central hub for advisor tools to analyze, plan, and solve key "
-        "business questions."
+        "A central hub for analyzing, planning, and making informed "
+        "business decisions."
         "</p>"
         '<div class="sbi-underline"></div>'
         "</div>",
@@ -145,14 +145,14 @@ def render_external(module):
         unsafe_allow_html=True,
     )
     st.caption(
-        "The modeler runs as its own application in a separate tab, "
+        "This module runs as its own application in a separate tab, "
         "with its original look and an independent session. This hub "
         "page stays open."
     )
 
 
 def render_hub_view(view):
-    """Render a placeholder for advisor workspace views (clients, scenarios, notes)."""
+    """Render a placeholder for workspace views (clients, scenarios, notes)."""
     theme.header_bar()
     titles = {
         "clients": "Recent Clients",

@@ -63,7 +63,8 @@ MODULES = [
             "Estimate business value, explore exit scenarios, and plan "
             "ownership transitions."
         ),
-        "status": STATUS_COMING_SOON,
+        "status": STATUS_ACTIVE,
+        "launch_url": "https://valuation-wesj.onrender.com/",
     },
     {
         "id": "workforce_hiring",

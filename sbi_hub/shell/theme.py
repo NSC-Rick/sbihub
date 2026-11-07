@@ -1,5 +1,5 @@
 """
-SBI Hub visual theme — advisor workspace shell.
+SBI Hub visual theme — workspace shell.
 
 Light content area with a dark sidebar and brand-accented chrome. All
 sponsor/organization branding (logo art, names, accent colors, header
@@ -519,7 +519,7 @@ def header_bar():
         '<div class="sbi-header-right">'
         f'<span class="sbi-header-ico">{icon("help", color="#4A6A82", size=20)}</span>'
         f'<span class="sbi-header-ico">{icon("bell", color="#4A6A82", size=20)}</span>'
-        '<span class="sbi-advisor"><span class="sbi-avatar">AD</span>Advisor</span>'
+        '<span class="sbi-advisor"><span class="sbi-avatar">U</span>User</span>'
         "</div>"
         + brand["header_art_svg"] +
         "</div>",

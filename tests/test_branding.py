@@ -41,6 +41,7 @@ def test_brand_colors_complete():
 def test_default_brand_is_north_star(app):
     markdown_values = [m.value for m in app.sidebar.markdown]
     assert any("North Star Consulting" in v for v in markdown_values)
+    assert any("Business Intelligence Platform" in v for v in markdown_values)
 
 
 def test_no_legacy_org_branding(app):
@@ -56,7 +57,7 @@ def test_no_legacy_org_branding(app):
 def test_product_identity_in_header(app):
     markdown_values = [m.value for m in app.markdown]
     assert any("Small Business Intelligence Hub" in v for v in markdown_values)
-    assert any("Advisor Workspace" in v for v in markdown_values)
+    assert any("Business Intelligence Workspace" in v for v in markdown_values)
 
 
 def test_brand_css_tokens_substituted(app):
