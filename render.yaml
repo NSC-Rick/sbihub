@@ -7,4 +7,4 @@ services:
       - key: PYTHON_VERSION
         value: "3.13.1"
     buildCommand: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
-    startCommand: python -m streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+    startCommand: python serve.py

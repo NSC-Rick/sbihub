@@ -1,36 +1,22 @@
 """
-SBI Hub visual theme — VtSBDC advisor workspace.
+SBI Hub visual theme — advisor workspace shell.
 
-Light content area with a dark navy sidebar, Vermont-inspired teal/green
-accents, and a mountain-ridge motif in the header.
+Light content area with a dark sidebar and brand-accented chrome. All
+sponsor/organization branding (logo art, names, accent colors, header
+artwork) comes from ``sbi_hub/config/branding.py``; this file owns only
+the neutral structure: surfaces, borders, body text, and layout styling.
 
-Palette:
-- Navy        #16324F  sidebar, headings, featured card
-- Navy deep   #12263B  sidebar gradients
-- Green       #2E7D5B  primary accent, card icons
-- Teal        #2AA198  secondary accent
-- Mist        #EAF1F4  header background
-- Off-white   #F4F7F5  app background
-
-Applied globally by the hub shell. The Financial Modeler module renders
-inside this theme; see its own ``custom_styles`` for module-level tweaks.
+Brand color placeholders (``%%TOKEN%%``) in ``_CSS`` are substituted by
+``apply()`` with the active brand palette — rebrand by editing the
+config, not this file.
 """
+import base64
+
 import streamlit as st
 
+from sbi_hub.config.branding import get_brand
 from sbi_hub.shell.icons import icon
 
-PALETTE = {
-    "navy": "#16324F",
-    "navy_deep": "#12263B",
-    "green": "#2E7D5B",
-    "teal": "#2AA198",
-    "mist": "#EAF1F4",
-    "surface": "#FFFFFF",
-    "background": "#F4F7F5",
-    "text": "#16324F",
-    "text_muted": "#5A7184",
-    "border": "#DCE6EA",
-}
 
 _CSS = """
 <style>
@@ -48,7 +34,7 @@ _CSS = """
 
     /* ---------- Sidebar ---------- */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #16324F 0%, #12263B 100%);
+        background: linear-gradient(180deg, %%SIDEBAR_BG%% 0%, %%SIDEBAR_BG_DEEP%% 100%);
         border-right: none;
     }
     section[data-testid="stSidebar"] * {
@@ -70,53 +56,55 @@ _CSS = """
     section[data-testid="stSidebar"] hr {
         border-color: #2A4763;
     }
-    .sbi-nav-item {
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
-        color: #DCE8F0;
-        text-decoration: none;
-        font-size: 0.92rem;
-        padding: 0.5rem 0.7rem;
-        border-radius: 8px;
-        margin-bottom: 0.15rem;
-    }
-    a.sbi-nav-item:hover {
-        background: #FFFFFF14;
-        color: #FFFFFF;
-    }
-    .sbi-nav-item.sbi-nav-active {
-        background: #2E7D5B;
-        color: #FFFFFF;
-        font-weight: 600;
-    }
     .sbi-quick-label {
         color: #7C97AB !important;
         font-size: 0.7rem;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        margin: 0.9rem 0 0.3rem;
+        margin: 0.55rem 0 0.3rem;
     }
-    .sbi-quick-link {
-        display: flex;
-        align-items: center;
-        gap: 0.55rem;
-        color: #B9CCDA;
-        font-size: 0.85rem;
-        padding: 0.3rem 0.4rem;
-        border-radius: 6px;
+
+    /* Sidebar nav — Streamlit buttons inside keyed wrappers (sbinav_<view>),
+       styled to match the mockup nav pills. Icons are injected per view by
+       nav_icon_styles() as ::before data-URI images. */
+    [class*="st-key-sbinav_"] {
+        margin-bottom: 0.15rem;
     }
-    .sbi-quick-link svg {
-        flex-shrink: 0;
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button {
+        justify-content: flex-start;
+        gap: 0.65rem;
+        background: transparent;
+        border: none;
+        color: #DCE8F0;
+        font-size: 0.92rem;
+        font-weight: 400;
+        padding: 0.5rem 0.7rem;
+        border-radius: 8px;
     }
-    .sbi-quick-link a {
-        color: #B9CCDA;
-        text-decoration: none;
-        flex: 1;
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button > div {
+        justify-content: flex-start;
     }
-    .sbi-quick-link a:hover {
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button p {
+        text-align: left;
+    }
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button:hover {
+        background: #FFFFFF14;
         color: #FFFFFF;
+    }
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button:focus:not(:active) {
+        color: #FFFFFF;
+    }
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button[kind="primary"],
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button[data-testid="stBaseButton-primary"] {
+        background: %%ACCENT%%;
+        color: %%ACCENT_TEXT%%;
+        font-weight: 600;
+    }
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button[kind="primary"]:hover,
+    [class*="st-key-sbinav_"] [data-testid="stButton"] button[data-testid="stBaseButton-primary"]:hover {
+        background: %%ACCENT%%;
+        color: %%ACCENT_TEXT%%;
     }
     section[data-testid="stSidebar"] [data-testid="stAlert"] * {
         color: #16324F;
@@ -151,7 +139,7 @@ _CSS = """
     .sbi-header-mark span {
         display: block;
         width: 7px;
-        background: #2E7D5B;
+        background: %%ACCENT%%;
         border-radius: 2px 2px 0 0;
     }
     .sbi-header-title {
@@ -187,8 +175,8 @@ _CSS = """
         width: 2rem;
         height: 2rem;
         border-radius: 50%;
-        background: #2E7D5B;
-        color: #FFFFFF;
+        background: %%ACCENT%%;
+        color: %%ACCENT_TEXT%%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -219,7 +207,7 @@ _CSS = """
     .sbi-welcome .sbi-underline {
         width: 3.2rem;
         height: 3px;
-        background: #2E7D5B;
+        background: %%ACCENT%%;
         border-radius: 2px;
         margin-bottom: 1.1rem;
     }
@@ -236,7 +224,7 @@ _CSS = """
         box-shadow: 0 1px 3px rgba(22, 50, 79, 0.06);
     }
     .sbi-card-icon {
-        color: #2E7D5B;
+        color: %%ACCENT%%;
         margin-bottom: 0.7rem;
     }
     .sbi-card-title {
@@ -251,7 +239,50 @@ _CSS = """
         font-size: 0.85rem;
         line-height: 1.4;
     }
-    .sbi-arrow {
+    /* Card action button — a Streamlit button (keyed open_<module>) whose
+       element container is overlaid where the mockup's circular arrow
+       sits; only rendered on active module cards. */
+    [class*="st-key-card_"] {
+        position: relative;
+    }
+    [class*="st-key-open_"] {
+        position: absolute !important;
+        right: 1rem;
+        bottom: 0.9rem;
+        width: auto !important;
+        margin: 0;
+    }
+    [class*="st-key-open_"] button {
+        width: 2rem;
+        height: 2rem;
+        min-height: 0;
+        padding: 0;
+        border-radius: 50%;
+        border: 1px solid #C8D8DD;
+        color: #7C97AB;
+        background: #FFFFFF;
+        font-size: 0.95rem;
+        line-height: 1;
+    }
+    [class*="st-key-open_"] button:hover {
+        border-color: %%ACCENT%%;
+        color: %%ACCENT%%;
+        background: #F0F7F3;
+    }
+    [class*="st-key-card_"]:has(.sbi-card-featured) [class*="st-key-open_"] button {
+        border-color: #3D6B86;
+        color: %%ACCENT_SOFT%%;
+        background: transparent;
+    }
+    [class*="st-key-card_"]:has(.sbi-card-featured) [class*="st-key-open_"] button:hover {
+        border-color: %%ACCENT_ON_DARK%%;
+        color: #FFFFFF;
+        background: #FFFFFF14;
+    }
+
+    /* External-launch link — same circle, anchored the same way, but a
+       real <a target="_blank"> for modules served as standalone apps. */
+    [class*="st-key-card_"] a.sbi-open-link {
         position: absolute;
         right: 1rem;
         bottom: 0.9rem;
@@ -261,15 +292,60 @@ _CSS = """
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        text-decoration: none;
         border: 1px solid #C8D8DD;
         color: #7C97AB;
         background: #FFFFFF;
+        text-decoration: none;
+        z-index: 2;
     }
-    a.sbi-arrow:hover {
-        border-color: #2E7D5B;
-        color: #2E7D5B;
+    [class*="st-key-card_"] a.sbi-open-link:hover {
+        border-color: %%ACCENT%%;
+        color: %%ACCENT%%;
         background: #F0F7F3;
+    }
+    [class*="st-key-card_"]:has(.sbi-card-featured) a.sbi-open-link {
+        border-color: #3D6B86;
+        color: %%ACCENT_SOFT%%;
+        background: transparent;
+    }
+    [class*="st-key-card_"]:has(.sbi-card-featured) a.sbi-open-link:hover {
+        border-color: %%ACCENT_ON_DARK%%;
+        color: #FFFFFF;
+        background: #FFFFFF14;
+    }
+    .sbi-card-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.55rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+    .sbi-card-featured .sbi-card-note {
+        color: %%ACCENT_ON_DARK%%;
+    }
+    .sbi-card:not(.sbi-card-featured) .sbi-card-note {
+        color: #7C97AB;
+    }
+
+    /* Launch CTA on the external-module launcher page */
+    a.sbi-launch-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: %%ACCENT%%;
+        color: %%ACCENT_TEXT%%;
+        font-weight: 600;
+        font-size: 0.92rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        margin: 0.4rem 0 0.6rem;
+    }
+    a.sbi-launch-cta:hover {
+        background: %%ACCENT_DARK%%;
+        color: %%ACCENT_TEXT%%;
     }
 
     /* Featured card */
@@ -278,7 +354,7 @@ _CSS = """
         border: none;
     }
     .sbi-card-featured .sbi-card-icon {
-        color: #7FD1C8;
+        color: %%ACCENT_ON_DARK%%;
     }
     .sbi-card-featured .sbi-card-title {
         color: #FFFFFF;
@@ -286,23 +362,38 @@ _CSS = """
     .sbi-card-featured .sbi-card-tagline {
         color: #A9C4D4;
     }
-    .sbi-card-featured .sbi-arrow {
-        border-color: #3D6B86;
-        color: #BEE3DC;
-        background: transparent;
-    }
-    a.sbi-card-featured .sbi-arrow:hover,
-    .sbi-card-featured a.sbi-arrow:hover {
-        border-color: #7FD1C8;
-        color: #FFFFFF;
-        background: #FFFFFF14;
-    }
     .sbi-featured-badge {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        background: #BEE3DC;
-        color: #14524A;
+        background: %%ACCENT_SOFT%%;
+        color: %%ACCENT_SOFT_TEXT%%;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 3px 9px;
+        border-radius: 9px;
+    }
+
+    /* Coming-soon card — visibly inert: no arrow, muted, dashed border */
+    .sbi-card-soon {
+        background: #F8FAFA;
+        border-style: dashed;
+        box-shadow: none;
+    }
+    .sbi-card-soon .sbi-card-icon {
+        color: #9DB4C0;
+    }
+    .sbi-card-soon .sbi-card-title {
+        color: #5A7184;
+    }
+    .sbi-soon-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: #EDF2F4;
+        border: 1px solid #DCE6EA;
+        color: #7C97AB;
         font-size: 0.62rem;
         font-weight: 800;
         letter-spacing: 0.08em;
@@ -314,7 +405,7 @@ _CSS = """
     .sbi-announcement {
         background: #FFFFFF;
         border: 1px solid #DCE6EA;
-        border-left: 3px solid #2AA198;
+        border-left: 3px solid %%ACCENT%%;
         border-radius: 8px;
         padding: 0.55rem 0.9rem;
         margin-bottom: 0.45rem;
@@ -355,36 +446,48 @@ _CSS = """
         justify-content: center;
         gap: 0.7rem;
     }
-    .sbi-footer .sbi-pines {
-        color: #2E7D5B;
+    .sbi-footer .sbi-brandmark {
+        color: %%ACCENT%%;
         display: inline-flex;
         gap: 2px;
     }
 </style>
 """
 
-_MOUNTAIN_SVG = """
-<svg class="sbi-mountains" viewBox="0 0 600 120" preserveAspectRatio="xMaxYMax slice" xmlns="http://www.w3.org/2000/svg">
-  <path d="M0 120 L120 45 L200 85 L300 30 L400 80 L480 40 L600 90 L600 120 Z" fill="#B7CFDD" opacity="0.55"/>
-  <path d="M0 120 L90 75 L190 105 L320 55 L430 100 L540 65 L600 95 L600 120 Z" fill="#8FB6C4" opacity="0.5"/>
-  <path d="M330 120 L390 88 L430 105 L470 78 L520 108 L560 85 L600 105 L600 120 Z" fill="#5E93A8" opacity="0.45"/>
-  <g fill="#2E7D5B" opacity="0.5">
-    <path d="M455 120 l6-16 6 16z"/><path d="M470 120 l5-13 5 13z"/><path d="M485 120 l7-19 7 19z"/>
-    <path d="M502 120 l5-14 5 14z"/><path d="M516 120 l6-17 6 17z"/><path d="M533 120 l5-12 5 12z"/>
-    <path d="M546 120 l7-18 7 18z"/><path d="M562 120 l5-13 5 13z"/><path d="M576 120 l6-16 6 16z"/>
-    <path d="M592 120 l5-14 5 14z"/>
-  </g>
-</svg>
-"""
-
-
 def apply():
-    """Inject the SBI Hub global styles."""
-    st.markdown(_CSS, unsafe_allow_html=True)
+    """Inject the SBI Hub global styles with the active brand palette."""
+    css = _CSS
+    for key, value in get_brand()["colors"].items():
+        css = css.replace(f"%%{key.upper()}%%", value)
+    st.markdown(css, unsafe_allow_html=True)
+
+
+def nav_icon_styles(view_icons):
+    """Inject per-view icons for sidebar nav buttons.
+
+    ``view_icons`` maps a view id to an icon name from
+    ``sbi_hub.shell.icons``. Each rule targets the keyed wrapper
+    ``sbinav_<view_id>`` rendered around the nav button in ``app.py`` and
+    draws the SVG as a ``::before`` image, matching the mockup's leading
+    icon. Called once per rerun, in the sidebar.
+    """
+    rules = ["<style>"]
+    for view_id, icon_name in view_icons.items():
+        svg = icon(icon_name, color="#DCE8F0", size=17)
+        encoded = base64.b64encode(svg.encode("utf-8")).decode("ascii")
+        rules.append(
+            f".st-key-sbinav_{view_id} [data-testid='stButton'] button::before "
+            "{ content:''; flex:none; width:17px; height:17px; "
+            f"background:url('data:image/svg+xml;base64,{encoded}') "
+            "center/contain no-repeat; }"
+        )
+    rules.append("</style>")
+    st.markdown("".join(rules), unsafe_allow_html=True)
 
 
 def header_bar():
-    """Render the 'Advisor Workspace' header bar with mountain motif."""
+    """Render the product header bar with the brand's decorative artwork."""
+    brand = get_brand()
     st.markdown(
         '<div class="sbi-header">'
         '<div class="sbi-header-left">'
@@ -392,8 +495,8 @@ def header_bar():
         '<span style="height:14px"></span><span style="height:22px"></span><span style="height:30px"></span>'
         "</div>"
         "<div>"
-        '<div class="sbi-header-title">Small Business Intelligence Hub</div>'
-        '<div class="sbi-header-sub">Advisor Workspace</div>'
+        f'<div class="sbi-header-title">{brand["product_name"]}</div>'
+        f'<div class="sbi-header-sub">{brand["product_subtitle"]}</div>'
         "</div>"
         "</div>"
         '<div class="sbi-header-right">'
@@ -401,7 +504,7 @@ def header_bar():
         f'<span class="sbi-header-ico">{icon("bell", color="#4A6A82", size=20)}</span>'
         '<span class="sbi-advisor"><span class="sbi-avatar">AD</span>Advisor</span>'
         "</div>"
-        + _MOUNTAIN_SVG +
+        + brand["header_art_svg"] +
         "</div>",
         unsafe_allow_html=True,
     )

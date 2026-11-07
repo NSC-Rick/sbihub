@@ -5,16 +5,17 @@ Renders the advisor-workspace header, the welcome heading, the module
 card grid (featured Financial Modeler plus upcoming modules), the
 announcements panel, and the footer tagline.
 
-Module cards navigate via a ``?view=<module_id>`` query parameter handled
-by the router in the repository root ``app.py``.
+Active module cards either expose a Streamlit button that updates
+``st.session_state.active_view`` in-place (embedded modules), or an
+``<a target="_blank">`` link for modules that launch their own
+standalone app in a new browser tab (``launch_url`` in the registry).
 """
 import streamlit as st
 
+from sbi_hub.config.branding import get_brand
 from sbi_hub.config.modules import MODULES, STATUS_ACTIVE
 from sbi_hub.shell import announcements, theme
 from sbi_hub.shell.icons import icon
-
-TAGLINE = "Better Insights. Better Decisions. Stronger Businesses."
 
 
 def _render_welcome():
@@ -31,28 +32,55 @@ def _render_welcome():
     )
 
 
-def _arrow(module):
-    """Circular arrow affordance: a link for active modules, static otherwise."""
-    arrow = icon("arrow", size=15)
-    if module["status"] == STATUS_ACTIVE:
-        return f'<a class="sbi-arrow" href="?view={module["id"]}" target="_self">{arrow}</a>'
-    return f'<span class="sbi-arrow">{arrow}</span>'
+def _open_module(module_id):
+    st.session_state.active_view = module_id
+    st.session_state._scroll_to_top = True
 
 
 def _render_card(module, column):
     featured = module.get("featured")
-    classes = "sbi-card sbi-card-featured" if featured else "sbi-card"
-    badge = '<span class="sbi-featured-badge">FEATURED</span>' if featured else ""
+    active = module["status"] == STATUS_ACTIVE
+    if featured:
+        classes = "sbi-card sbi-card-featured"
+        badge = '<span class="sbi-featured-badge">FEATURED</span>'
+    elif active:
+        classes, badge = "sbi-card", ""
+    else:
+        classes = "sbi-card sbi-card-soon"
+        badge = '<span class="sbi-soon-badge">COMING SOON</span>'
 
-    st.markdown(
-        f'<div class="{classes}">{badge}'
-        f'<div class="sbi-card-icon">{icon(module["icon"], size=30)}</div>'
-        f'<div class="sbi-card-title">{module["name"]}</div>'
-        f'<div class="sbi-card-tagline">{module["tagline"]}</div>'
-        f"{_arrow(module)}"
-        "</div>",
-        unsafe_allow_html=True,
+    launch_url = module.get("launch_url")
+    new_tab_note = (
+        '<div class="sbi-card-note">'
+        f'{icon("external", size=11)}Opens in a new tab</div>'
+        if launch_url else ""
     )
+
+    with column, st.container(key=f"card_{module['id']}"):
+        st.markdown(
+            f'<div class="{classes}">{badge}'
+            f'<div class="sbi-card-icon">{icon(module["icon"], size=30)}</div>'
+            f'<div class="sbi-card-title">{module["name"]}</div>'
+            f'<div class="sbi-card-tagline">{module["tagline"]}</div>'
+            f"{new_tab_note}"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+        if active and launch_url:
+            st.markdown(
+                f'<a class="sbi-open-link" href="{launch_url}" target="_blank" '
+                f'title="Open {module["name"]} in a new tab">'
+                f'{icon("external", size=15)}</a>',
+                unsafe_allow_html=True,
+            )
+        elif active:
+            st.button(
+                "→",
+                key=f"open_{module['id']}",
+                help=f"Open {module['name']}",
+                on_click=_open_module,
+                args=(module["id"],),
+            )
 
 
 def _render_grid():
@@ -66,10 +94,11 @@ def _render_grid():
 
 
 def _render_footer():
-    pines = icon("pine", size=18) + icon("pine", size=14)
+    brand = get_brand()
+    mark = icon(brand["footer_icon"], size=18) + icon(brand["footer_icon"], size=14)
     st.markdown(
-        f'<div class="sbi-footer"><span class="sbi-pines">{pines}</span>'
-        f"{TAGLINE}</div>",
+        f'<div class="sbi-footer"><span class="sbi-brandmark">{mark}</span>'
+        f"{brand['tagline']}</div>",
         unsafe_allow_html=True,
     )
 
@@ -96,6 +125,30 @@ def render_coming_soon(module):
         unsafe_allow_html=True,
     )
     st.info("This module is under development and will be available in a future build.")
+
+
+def render_external(module):
+    """Render the launch page for a module that runs as its own app."""
+    theme.header_bar()
+    launch_url = module["launch_url"]
+    st.markdown(
+        f'<div class="sbi-card" style="min-height:0; padding-bottom:1.35rem;">'
+        f'<div class="sbi-card-icon">{icon(module["icon"], size=34)}</div>'
+        f'<div class="sbi-card-title">{module["name"]}</div>'
+        f'<div class="sbi-card-tagline">{module["description"]}</div>'
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f'<a class="sbi-launch-cta" href="{launch_url}" target="_blank">'
+        f'{icon("external", size=15)}Open {module["name"]} in a new tab</a>',
+        unsafe_allow_html=True,
+    )
+    st.caption(
+        "The modeler runs as its own application in a separate tab, "
+        "with its original look and an independent session. This hub "
+        "page stays open."
+    )
 
 
 def render_hub_view(view):
