@@ -113,7 +113,7 @@ def test_coming_soon_module_renders_placeholder(app):
 
     assert not app.exception
     markdown_values = [m.value for m in app.markdown]
-    assert any("Automation & AI Opportunity Evaluator" in v for v in markdown_values)
+    assert any("Automation & AI Opportunities" in v for v in markdown_values)
     back_buttons = [b for b in app.sidebar.button if "Back to SBI Hub" in b.label]
     assert len(back_buttons) == 1
 

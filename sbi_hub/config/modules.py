@@ -25,10 +25,13 @@ MODULES = [
         "id": "financial_modeler",
         "name": "Financial Modeler",
         "icon": "chart",
-        "tagline": "Financial performance, cash flow, pricing, and resilience",
+        "tagline": (
+            "Financial projections, cash flow, profitability, and "
+            "scenario analysis."
+        ),
         "description": (
-            "Create multi-year operating models with revenue streams, payroll, "
-            "expenses, financing, and full financial statements."
+            "Financial projections, cash flow, profitability, and "
+            "scenario analysis."
         ),
         "status": STATUS_ACTIVE,
         "featured": True,
@@ -36,42 +39,57 @@ MODULES = [
     },
     {
         "id": "idea_feasibility",
-        "name": "Business Idea & Feasibility",
+        "name": "Business Idea Feasibility & Startup",
         "icon": "bulb",
-        "tagline": "Evaluate the strength and readiness of a new idea",
+        "tagline": (
+            "Evaluate business ideas, assess market potential, and test "
+            "startup viability."
+        ),
         "description": (
-            "Assess market fit, startup requirements, and viability before "
-            "committing time and capital."
+            "Evaluate business ideas, assess market potential, and test "
+            "startup viability."
         ),
         "status": STATUS_COMING_SOON,
     },
     {
         "id": "valuation_succession",
-        "name": "Business Valuation",
+        "name": "Business Valuation & Succession",
         "icon": "scale",
-        "tagline": "Value range, succession, and exit scenarios",
+        "tagline": (
+            "Estimate business value, explore exit scenarios, and plan "
+            "ownership transitions."
+        ),
         "description": (
-            "Estimate business value and plan for ownership transition or sale."
+            "Estimate business value, explore exit scenarios, and plan "
+            "ownership transitions."
         ),
         "status": STATUS_COMING_SOON,
     },
     {
         "id": "workforce_hiring",
-        "name": "Workforce & Hiring",
+        "name": "Workforce & Hiring Decisions",
         "icon": "users",
-        "tagline": "Hiring, labor costs, and staffing decisions",
+        "tagline": (
+            "Evaluate staffing needs, labor costs, productivity, and "
+            "hiring alternatives."
+        ),
         "description": (
-            "Model roles, compensation, and hiring timelines against growth plans."
+            "Evaluate staffing needs, labor costs, productivity, and "
+            "hiring alternatives."
         ),
         "status": STATUS_COMING_SOON,
     },
     {
         "id": "capital_investment",
-        "name": "Capital Investment",
+        "name": "Projects and Capital Investments",
         "icon": "tractor",
-        "tagline": "Equipment, leasing, and purchase decisions",
+        "tagline": (
+            "Evaluate business projects, equipment investments, financing "
+            "options, and returns."
+        ),
         "description": (
-            "Compare equipment, expansion, and financing options side by side."
+            "Evaluate business projects, equipment investments, financing "
+            "options, and returns."
         ),
         "status": STATUS_COMING_SOON,
     },
@@ -79,29 +97,41 @@ MODULES = [
         "id": "sales_growth",
         "name": "Sales & Growth",
         "icon": "growth",
-        "tagline": "Leads, conversion, and customer growth",
+        "tagline": (
+            "Model customer acquisition, sales performance, revenue growth, "
+            "and marketing effectiveness."
+        ),
         "description": (
-            "Analyze sales channels, pricing, and growth scenarios for the business."
+            "Model customer acquisition, sales performance, revenue growth, "
+            "and marketing effectiveness."
         ),
         "status": STATUS_COMING_SOON,
     },
     {
         "id": "operations_modeler",
-        "name": "Operations Modeler",
+        "name": "Operations & Efficiency",
         "icon": "gear",
-        "tagline": "Inventory, efficiency, and capacity",
+        "tagline": (
+            "Improve inventory management, operating efficiency, and "
+            "business capacity."
+        ),
         "description": (
-            "Model capacity, workflows, and operational efficiency improvements."
+            "Improve inventory management, operating efficiency, and "
+            "business capacity."
         ),
         "status": STATUS_COMING_SOON,
     },
     {
         "id": "automation_ai",
-        "name": "Automation & AI Opportunity Evaluator",
+        "name": "Automation & AI Opportunities",
         "icon": "cpu",
-        "tagline": "Find where automation pays off",
+        "tagline": (
+            "Identify automation opportunities, evaluate AI use cases, and "
+            "estimate potential business value."
+        ),
         "description": (
-            "Identify and prioritize automation and AI opportunities in the business."
+            "Identify automation opportunities, evaluate AI use cases, and "
+            "estimate potential business value."
         ),
         "status": STATUS_COMING_SOON,
     },

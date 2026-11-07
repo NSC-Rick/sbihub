@@ -9,8 +9,30 @@ from sbi_hub.config.modules import (
 from sbi_hub.shell.icons import icon
 
 
+APPROVED_TITLES = [
+    "Financial Modeler",
+    "Business Idea Feasibility & Startup",
+    "Business Valuation & Succession",
+    "Workforce & Hiring Decisions",
+    "Projects and Capital Investments",
+    "Sales & Growth",
+    "Operations & Efficiency",
+    "Automation & AI Opportunities",
+]
+
+
 def test_eight_modules_registered():
     assert len(MODULES) == 8
+
+
+def test_approved_titles_in_order():
+    assert [m["name"] for m in MODULES] == APPROVED_TITLES
+
+
+def test_every_module_has_tagline_and_description():
+    for m in MODULES:
+        assert m["tagline"].endswith("."), m["id"]
+        assert m["description"], m["id"]
 
 
 def test_module_ids_unique():

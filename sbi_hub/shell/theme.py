@@ -213,6 +213,9 @@ _CSS = """
     }
 
     /* ---------- Module cards ---------- */
+    [class*="st-key-card_"] {
+        height: 100%;
+    }
     .sbi-card {
         position: relative;
         background: #FFFFFF;
@@ -220,8 +223,22 @@ _CSS = """
         border-radius: 14px;
         padding: 1.35rem 1.3rem 3rem;
         min-height: 11.4rem;
+        height: 100%;
+        box-sizing: border-box;
         margin-bottom: 0.9rem;
         box-shadow: 0 1px 3px rgba(22, 50, 79, 0.06);
+    }
+    /* Card grid — wrap to two columns on narrower viewports */
+    @media (max-width: 1150px) {
+        [data-testid="stHorizontalBlock"]:has([class*="st-key-card_"]) {
+            flex-wrap: wrap;
+            row-gap: 0.5rem;
+        }
+        [data-testid="stHorizontalBlock"]:has([class*="st-key-card_"])
+        > [data-testid="stColumn"] {
+            flex: 1 1 45%;
+            min-width: 240px;
+        }
     }
     .sbi-card-icon {
         color: %%ACCENT%%;
