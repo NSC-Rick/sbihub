@@ -4,7 +4,8 @@ SBI Hub multi-app server — one Render service, two Streamlit apps.
 Runs both Streamlit apps as child processes and exposes them through a
 single reverse proxy on ``$PORT``:
 
-- ``/``        -> SBI Hub shell       (127.0.0.1:8501, light VtSBDC theme)
+- ``/``        -> SBI Hub shell       (127.0.0.1:8501, light theme, brand
+                    accent from ``sbi_hub/config/branding.py``)
 - ``/fm``      -> Financial Modeler   (127.0.0.1:8502, ``baseUrlPath=/fm``,
                     original standalone dark theme)
 
@@ -28,6 +29,8 @@ import sys
 import time
 
 from aiohttp import ClientSession, WSMsgType, web
+
+from sbi_hub.config.branding import get_brand
 
 HUB_PORT = int(os.environ.get("SBI_HUB_PORT", "8501"))
 FM_PORT = int(os.environ.get("SBI_FM_PORT", "8502"))
@@ -178,9 +181,13 @@ def _spawn_apps():
         # watchdog backend is unstable on some platforms).
         "--server.fileWatcherType", "none",
     ]
+    # Hub theme colors come from .streamlit/config.toml; the brand accent
+    # is injected here so branding.py is the single source of truth.
+    accent = get_brand()["colors"]["accent"]
     hub = _spawn([
         "-m", "streamlit", "run", "app.py",
         "--server.port", str(HUB_PORT), *common,
+        "--theme.primaryColor", accent,
     ])
     fm = _spawn([
         "-m", "streamlit", "run", "fm_app.py",
