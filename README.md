@@ -24,14 +24,15 @@ the application shell and integrates the existing **Financial Modeler**
 Modular monolith, single web service:
 
 ```
-app.py                        # Entry point: page config + module router
+app.py                        # Entry point: page config, sidebar, ?view= router
 sbi_hub/
 ├── shell/                    # Application shell
-│   ├── landing.py            # Landing page (hero, cards, announcements panel)
+│   ├── landing.py            # Landing page + workspace placeholder views
 │   ├── announcements.py      # Announcements loader + renderer
-│   └── theme.py              # Vermont navy/teal/green CSS
+│   ├── theme.py              # VtSBDC light theme CSS + header bar
+│   └── icons.py              # Inline SVG icon set
 ├── config/
-│   ├── modules.py            # Module registry (id, name, status)
+│   ├── modules.py            # Module registry (id, name, status, featured)
 │   └── announcements.json    # Announcements config file
 └── modules/
     └── financial_modeler/    # Vendored Financial Modeler (see below)
@@ -41,9 +42,14 @@ sbi_hub/
         ├── utils/            # Session, export, styles (unchanged)
         ├── analysis/  components/  config/  docs/  tests/
 tests/                        # Hub-level + integration tests
-.streamlit/config.toml        # Dark Vermont theme
+.streamlit/config.toml        # Light Vermont theme
 render.yaml                   # Render service definition
 ```
+
+Navigation uses `?view=<id>` query parameters (module cards, sidebar nav,
+and quick-access links are plain links), with a "← Back to SBI Hub" button
+shown inside modules. Sidebar workspace items — Recent Clients, Saved
+Scenarios, Advisor Notes — render placeholder pages pending future builds.
 
 ## Financial Modeler integration
 
@@ -57,6 +63,10 @@ Changes made during vendoring — none alter modeling logic:
   (`from sbi_hub.modules.financial_modeler.engine ...`).
 - `app.py` wrapped in `render()`; `st.set_page_config` moved to the hub
   shell (it may only be called once per app).
+- `utils/custom_styles.py` gained a one-line guard: its white-text alert
+  override is skipped under the hub's light theme (the override targets the
+  original dark theme's blue panels and would be unreadable on light
+  backgrounds). Behavior under the dark theme is unchanged.
 - A "← Back to SBI Hub" control is injected by the hub shell sidebar;
   all nine Financial Modeler screens, the session restore/autosave flow,
   scenario JSON save/load, Excel exports, and the AI coach widget are
@@ -96,8 +106,8 @@ pytest
 
 ## Build 1 Validation Report
 
-- **234 tests passing** (209 vendored Financial Modeler baseline tests +
-  25 new hub tests) covering engine calculations, P&L/cash-flow statements,
+- **237 tests passing** (209 vendored Financial Modeler baseline tests +
+  28 new hub tests) covering engine calculations, P&L/cash-flow statements,
   loan amortization, capital stack, scenario JSON save/load validation,
   Excel export, module registry integrity, announcement ordering, and
   app-level navigation (landing → Financial Modeler → back to hub) via
@@ -121,5 +131,14 @@ pytest
    This matches standalone behavior on the same tier.
 5. **ElevenLabs widget** — the external AI coach script loads as before;
    it is unaffected but remains an external dependency.
-6. **Theme** — the hub theme (dark navy/teal) applies globally; the
-   Financial Modeler keeps its dark styling unchanged.
+6. **Theme** — the hub theme (light, VtSBDC navy/green) applies globally.
+   The Financial Modeler was designed for a dark theme; it remains fully
+   usable under the light theme, and its dark-theme alert-text override is
+   disabled via a compatibility guard (see vendoring notes).
+7. **Module naming** — the card grid follows the spec's eight-module list.
+   The approved design mockup shows "Business Idea Evaluator" and
+   "Startup Feasibility" as separate cards and omits "Automation & AI
+   Opportunity Evaluator"; swapping registry entries is a one-line change
+   if the mockup list is preferred.
+8. **Placeholder views** — Recent Clients, Saved Scenarios, and Advisor
+   Notes are stub pages; workspace data management is out of Build 1 scope.

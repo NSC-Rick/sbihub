@@ -8,10 +8,16 @@ import streamlit as st
 def apply_custom_styles():
     """
     Apply custom CSS styles to improve readability throughout the application.
-    
+
     Enhancement 3: Improves text contrast in blue information panels by setting
     text color to white (#FFFFFF) for better readability.
+
+    SBI Hub compatibility shim: under the hub's light theme, alert panels use a
+    light background where white text would be unreadable, so this override is
+    skipped. Behavior is unchanged under the original dark theme.
     """
+    if st.session_state.get("sbi_theme") == "light":
+        return
     st.markdown("""
         <style>
         /* Enhancement 3: Improve guidance text contrast on blue info panels */

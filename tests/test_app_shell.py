@@ -24,28 +24,41 @@ def test_landing_page_renders(app):
     assert not app.exception
 
     markdown_values = [m.value for m in app.markdown]
-    assert any("Welcome to SBI Hub" in v for v in markdown_values)
+    assert any("How can we help your client today?" in v for v in markdown_values)
     assert any("Better Insights. Better Decisions. Stronger Businesses." in v for v in markdown_values)
     assert any("Announcements & Updates" in v for v in markdown_values)
 
 
-def test_landing_page_has_eight_module_buttons(app):
-    labels = [b.label for b in app.button]
-    assert "Open Financial Modeler" in labels
-    assert labels.count("Coming Soon") == 7
+def test_landing_page_has_eight_module_cards(app):
+    markdown_values = [m.value for m in app.markdown]
+    cards = [v for v in markdown_values if 'class="sbi-card' in v]
+    assert len(cards) == 8
+    assert any("sbi-card-featured" in v for v in cards)
+
+
+def test_financial_modeler_card_links_to_module(app):
+    markdown_values = [m.value for m in app.markdown]
+    assert any('href="?view=financial_modeler"' in v for v in markdown_values)
+
+
+def test_sidebar_nav_links_render(app):
+    markdown_values = [m.value for m in app.sidebar.markdown]
+    for view in ("hub", "clients", "scenarios", "notes"):
+        assert any(f'href="?view={view}"' in v for v in markdown_values)
 
 
 def test_navigate_to_financial_modeler(app):
-    app.button(key="open_financial_modeler").click().run()
+    app.session_state["active_view"] = "financial_modeler"
+    app.run()
 
     assert not app.exception
-    assert app.session_state["active_view"] == "financial_modeler"
     sidebar_titles = [t.value for t in app.sidebar.title] + [t.body for t in app.sidebar.title]
     assert any("Operating Model" in t for t in sidebar_titles)
 
 
 def test_back_to_hub_navigation(app):
-    app.button(key="open_financial_modeler").click().run()
+    app.session_state["active_view"] = "financial_modeler"
+    app.run()
     assert not app.exception
 
     back_buttons = [b for b in app.sidebar.button if "Back to SBI Hub" in b.label]
@@ -54,3 +67,10 @@ def test_back_to_hub_navigation(app):
 
     assert not app.exception
     assert app.session_state["active_view"] == "hub"
+
+
+def test_module_registry_module_names_on_cards(app):
+    from sbi_hub.config.modules import MODULES
+    markdown_values = [m.value for m in app.markdown]
+    for module in MODULES:
+        assert any(module["name"] in v for v in markdown_values), module["name"]

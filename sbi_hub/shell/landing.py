@@ -1,108 +1,114 @@
 """
 SBI Hub landing page.
 
-Renders the welcome hero, the announcements panel, and the module card
-grid. Active modules navigate into the module router; upcoming modules
-are labeled Coming Soon.
+Renders the advisor-workspace header, the welcome heading, the module
+card grid (featured Financial Modeler plus upcoming modules), the
+announcements panel, and the footer tagline.
+
+Module cards navigate via a ``?view=<module_id>`` query parameter handled
+by the router in the repository root ``app.py``.
 """
 import streamlit as st
 
 from sbi_hub.config.modules import MODULES, STATUS_ACTIVE
-from sbi_hub.shell import announcements
+from sbi_hub.shell import announcements, theme
+from sbi_hub.shell.icons import icon
 
 TAGLINE = "Better Insights. Better Decisions. Stronger Businesses."
 
 
-def _open_module(module_id):
-    st.session_state.active_view = module_id
-    st.session_state.nav = module_id
-    st.session_state._scroll_to_top = True
-
-
-def _render_hero():
+def _render_welcome():
     st.markdown(
-        '<div class="sbi-hero">'
-        "<h1>Welcome to SBI Hub</h1>"
-        f'<div class="sbi-tagline">{TAGLINE}</div>'
-        '<p class="sbi-intro">'
-        "Your central workspace for small-business advising. SBI Hub brings "
-        "financial modeling, feasibility analysis, valuation, workforce planning, "
-        "and more together in one place — so every client conversation starts "
-        "with better information."
+        '<div class="sbi-welcome">'
+        "<h2>How can we help your client today?</h2>"
+        '<p class="sbi-welcome-sub">'
+        "A central hub for advisor tools to analyze, plan, and solve key "
+        "business questions."
         "</p>"
+        '<div class="sbi-underline"></div>'
         "</div>",
         unsafe_allow_html=True,
     )
 
 
+def _arrow(module):
+    """Circular arrow affordance: a link for active modules, static otherwise."""
+    arrow = icon("arrow", size=15)
+    if module["status"] == STATUS_ACTIVE:
+        return f'<a class="sbi-arrow" href="?view={module["id"]}" target="_self">{arrow}</a>'
+    return f'<span class="sbi-arrow">{arrow}</span>'
+
+
 def _render_card(module, column):
-    active = module["status"] == STATUS_ACTIVE
-    card_class = "sbi-card sbi-card-active" if active else "sbi-card"
-    badge = (
-        '<span class="sbi-badge sbi-badge-active">AVAILABLE</span>'
-        if active
-        else '<span class="sbi-badge sbi-badge-soon">COMING SOON</span>'
+    featured = module.get("featured")
+    classes = "sbi-card sbi-card-featured" if featured else "sbi-card"
+    badge = '<span class="sbi-featured-badge">FEATURED</span>' if featured else ""
+
+    st.markdown(
+        f'<div class="{classes}">{badge}'
+        f'<div class="sbi-card-icon">{icon(module["icon"], size=30)}</div>'
+        f'<div class="sbi-card-title">{module["name"]}</div>'
+        f'<div class="sbi-card-tagline">{module["tagline"]}</div>'
+        f"{_arrow(module)}"
+        "</div>",
+        unsafe_allow_html=True,
     )
 
-    with column:
-        st.markdown(
-            f'<div class="{card_class}">'
-            f'<div class="sbi-card-icon">{module["icon"]}</div>'
-            f'<div class="sbi-card-title">{module["name"]}</div>'
-            f'<div class="sbi-card-tagline">{module["tagline"]}</div>'
-            f'<div class="sbi-card-desc">{module["description"]}</div>'
-            f"{badge}"
-            "</div>",
-            unsafe_allow_html=True,
-        )
-        if active:
-            st.button(
-                f"Open {module['name']}",
-                key=f"open_{module['id']}",
-                type="primary",
-                use_container_width=True,
-                on_click=_open_module,
-                args=(module["id"],),
-            )
-        else:
-            st.button(
-                "Coming Soon",
-                key=f"soon_{module['id']}",
-                disabled=True,
-                use_container_width=True,
-            )
 
-
-def render():
-    """Render the SBI Hub landing page."""
-    _render_hero()
-
-    announcements.render()
-
-    st.markdown("### 🧰 Advisory Modules")
-
+def _render_grid():
     columns_per_row = 4
     for row_start in range(0, len(MODULES), columns_per_row):
         row = MODULES[row_start:row_start + columns_per_row]
         cols = st.columns(columns_per_row, gap="medium")
         for col, module in zip(cols, row):
-            _render_card(module, col)
+            with col:
+                _render_card(module, col)
+
+
+def _render_footer():
+    pines = icon("pine", size=18) + icon("pine", size=14)
+    st.markdown(
+        f'<div class="sbi-footer"><span class="sbi-pines">{pines}</span>'
+        f"{TAGLINE}</div>",
+        unsafe_allow_html=True,
+    )
+
+
+def render():
+    """Render the SBI Hub landing page."""
+    theme.header_bar()
+    _render_welcome()
+    _render_grid()
+    st.markdown("")
+    announcements.render()
+    _render_footer()
 
 
 def render_coming_soon(module):
     """Render a placeholder page for a module still in development."""
+    theme.header_bar()
     st.markdown(
-        '<div class="sbi-hero">'
-        f'<h1>{module["icon"]} {module["name"]}</h1>'
-        f'<div class="sbi-tagline">{module["tagline"]}</div>'
-        f'<p class="sbi-intro">{module["description"]}</p>'
+        f'<div class="sbi-card" style="min-height:0; padding-bottom:1.35rem;">'
+        f'<div class="sbi-card-icon">{icon(module["icon"], size=34)}</div>'
+        f'<div class="sbi-card-title">{module["name"]}</div>'
+        f'<div class="sbi-card-tagline">{module["description"]}</div>'
         "</div>",
         unsafe_allow_html=True,
     )
     st.info("This module is under development and will be available in a future build.")
 
-    def _go_home():
-        st.session_state.active_view = "hub"
-        st.session_state.nav = "hub"
 
-    st.button("← Back to SBI Hub", on_click=_go_home)
+def render_hub_view(view):
+    """Render a placeholder for advisor workspace views (clients, scenarios, notes)."""
+    theme.header_bar()
+    titles = {
+        "clients": "Recent Clients",
+        "scenarios": "Saved Scenarios",
+        "notes": "Advisor Notes",
+    }
+    title = titles.get(view, view.replace("_", " ").title())
+    st.markdown(
+        f'<div class="sbi-welcome"><h2>{title}</h2><div class="sbi-underline"></div></div>',
+        unsafe_allow_html=True,
+    )
+    st.info("This workspace view is planned for a future build.")

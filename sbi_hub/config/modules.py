@@ -2,9 +2,9 @@
 SBI Hub module registry.
 
 Each entry describes one hub module: its identity, card content for the
-landing page, and availability status. Adding a future module only
-requires updating ``status`` and wiring its entry point in the router
-(see the repository root ``app.py``).
+landing page, icon key (see ``sbi_hub/shell/icons.py``), and availability
+status. Adding a future module only requires updating ``status`` and
+wiring its entry point in the router (see the repository root ``app.py``).
 """
 
 STATUS_ACTIVE = "active"
@@ -14,21 +14,22 @@ MODULES = [
     {
         "id": "financial_modeler",
         "name": "Financial Modeler",
-        "icon": "💰",
-        "tagline": "Build monthly and annual financial projections.",
+        "icon": "chart",
+        "tagline": "Financial performance, cash flow, pricing, and resilience",
         "description": (
             "Create multi-year operating models with revenue streams, payroll, "
             "expenses, financing, and full financial statements."
         ),
         "status": STATUS_ACTIVE,
+        "featured": True,
     },
     {
         "id": "idea_feasibility",
         "name": "Business Idea & Feasibility",
-        "icon": "💡",
-        "tagline": "Pressure-test a new business idea.",
+        "icon": "bulb",
+        "tagline": "Evaluate the strength and readiness of a new idea",
         "description": (
-            "Evaluate market fit, startup requirements, and viability before "
+            "Startup costs, break-even, runway, and market readiness before "
             "committing time and capital."
         ),
         "status": STATUS_COMING_SOON,
@@ -36,8 +37,8 @@ MODULES = [
     {
         "id": "valuation_succession",
         "name": "Business Valuation & Succession",
-        "icon": "🤝",
-        "tagline": "Understand what the business is worth.",
+        "icon": "scale",
+        "tagline": "Value range, succession, and exit scenarios",
         "description": (
             "Estimate business value and plan for ownership transition or sale."
         ),
@@ -46,8 +47,8 @@ MODULES = [
     {
         "id": "workforce_hiring",
         "name": "Workforce & Hiring",
-        "icon": "👥",
-        "tagline": "Plan the team the business needs.",
+        "icon": "users",
+        "tagline": "Hiring, labor costs, and staffing decisions",
         "description": (
             "Model roles, compensation, and hiring timelines against growth plans."
         ),
@@ -56,8 +57,8 @@ MODULES = [
     {
         "id": "capital_investment",
         "name": "Capital Investment",
-        "icon": "🏦",
-        "tagline": "Evaluate major purchases and financing.",
+        "icon": "tractor",
+        "tagline": "Equipment, leasing, and purchase decisions",
         "description": (
             "Compare equipment, expansion, and financing options side by side."
         ),
@@ -66,8 +67,8 @@ MODULES = [
     {
         "id": "sales_growth",
         "name": "Sales & Growth",
-        "icon": "📈",
-        "tagline": "Chart a path to higher revenue.",
+        "icon": "growth",
+        "tagline": "Leads, conversion, and customer growth",
         "description": (
             "Analyze sales channels, pricing, and growth scenarios for the business."
         ),
@@ -76,8 +77,8 @@ MODULES = [
     {
         "id": "operations_modeler",
         "name": "Operations Modeler",
-        "icon": "⚙️",
-        "tagline": "Streamline how the business runs.",
+        "icon": "gear",
+        "tagline": "Inventory, efficiency, and capacity",
         "description": (
             "Model capacity, workflows, and operational efficiency improvements."
         ),
@@ -86,8 +87,8 @@ MODULES = [
     {
         "id": "automation_ai",
         "name": "Automation & AI Opportunity Evaluator",
-        "icon": "🤖",
-        "tagline": "Find where automation pays off.",
+        "icon": "cpu",
+        "tagline": "Where automation and AI pay off first",
         "description": (
             "Identify and prioritize automation and AI opportunities in the business."
         ),
