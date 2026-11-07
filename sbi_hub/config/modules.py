@@ -24,19 +24,28 @@ MODULES = [
         "featured": True,
     },
     {
-        "id": "idea_feasibility",
-        "name": "Business Idea & Feasibility",
+        "id": "idea_evaluator",
+        "name": "Business Idea Evaluator",
         "icon": "bulb",
         "tagline": "Evaluate the strength and readiness of a new idea",
         "description": (
-            "Startup costs, break-even, runway, and market readiness before "
-            "committing time and capital."
+            "Assess market fit and readiness before committing time and capital."
+        ),
+        "status": STATUS_COMING_SOON,
+    },
+    {
+        "id": "startup_feasibility",
+        "name": "Startup Feasibility",
+        "icon": "rocket",
+        "tagline": "Startup costs, break-even, and runway",
+        "description": (
+            "Model launch costs, funding needs, and the path to break-even."
         ),
         "status": STATUS_COMING_SOON,
     },
     {
         "id": "valuation_succession",
-        "name": "Business Valuation & Succession",
+        "name": "Business Valuation",
         "icon": "scale",
         "tagline": "Value range, succession, and exit scenarios",
         "description": (
@@ -81,16 +90,6 @@ MODULES = [
         "tagline": "Inventory, efficiency, and capacity",
         "description": (
             "Model capacity, workflows, and operational efficiency improvements."
-        ),
-        "status": STATUS_COMING_SOON,
-    },
-    {
-        "id": "automation_ai",
-        "name": "Automation & AI Opportunity Evaluator",
-        "icon": "cpu",
-        "tagline": "Where automation and AI pay off first",
-        "description": (
-            "Identify and prioritize automation and AI opportunities in the business."
         ),
         "status": STATUS_COMING_SOON,
     },

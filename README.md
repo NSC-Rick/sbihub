@@ -10,14 +10,14 @@ the application shell and integrates the existing **Financial Modeler**
 
 | Module | Status |
 |---|---|
-| Financial Modeler | **Active** |
-| Business Idea & Feasibility | Coming Soon |
-| Business Valuation & Succession | Coming Soon |
+| Financial Modeler | **Active (Featured)** |
+| Business Idea Evaluator | Coming Soon |
+| Startup Feasibility | Coming Soon |
+| Business Valuation | Coming Soon |
 | Workforce & Hiring | Coming Soon |
 | Capital Investment | Coming Soon |
 | Sales & Growth | Coming Soon |
 | Operations Modeler | Coming Soon |
-| Automation & AI Opportunity Evaluator | Coming Soon |
 
 ## Architecture
 
@@ -135,10 +135,10 @@ pytest
    The Financial Modeler was designed for a dark theme; it remains fully
    usable under the light theme, and its dark-theme alert-text override is
    disabled via a compatibility guard (see vendoring notes).
-7. **Module naming** — the card grid follows the spec's eight-module list.
-   The approved design mockup shows "Business Idea Evaluator" and
-   "Startup Feasibility" as separate cards and omits "Automation & AI
-   Opportunity Evaluator"; swapping registry entries is a one-line change
-   if the mockup list is preferred.
+7. **Module naming** — the card grid follows the approved design mockup
+   (Business Idea Evaluator and Startup Feasibility as separate cards).
+   "Automation & AI Opportunity Evaluator" from the written spec is not on
+   the Build 1 grid; it can be added back as a ninth registry entry or
+   swapped in later.
 8. **Placeholder views** — Recent Clients, Saved Scenarios, and Advisor
    Notes are stub pages; workspace data management is out of Build 1 scope.
