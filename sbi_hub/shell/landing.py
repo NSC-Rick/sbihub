@@ -112,7 +112,7 @@ def render():
     _render_welcome()
     _render_grid()
     st.markdown("")
-    announcements.render()
+    announcements.render(limit=6)
     _render_footer()
 
 
