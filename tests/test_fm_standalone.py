@@ -23,7 +23,7 @@ def app(monkeypatch, tmp_path):
 def test_standalone_fm_renders(app):
     assert not app.exception
     sidebar_titles = [t.value for t in app.sidebar.title]
-    assert any("Operating Model" in t for t in sidebar_titles)
+    assert any("Financial Modeler" in t for t in sidebar_titles)
 
 
 def test_standalone_fm_has_no_hub_chrome(app):

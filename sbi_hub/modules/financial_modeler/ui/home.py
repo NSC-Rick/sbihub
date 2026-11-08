@@ -275,7 +275,7 @@ def render():
     """Render the home page."""
     initialize_session_state()
     
-    st.title("Operating Model")
+    st.title("Financial Modeler")
     st.caption("Structured financial and capital modeling framework")
     
     with st.expander("🎬 Watch the 2-minute Modeler introduction", expanded=False):
@@ -299,7 +299,7 @@ def render():
     st.markdown("---")
     
     st.markdown("""
-    ### Welcome to Operating Model
+    ### Welcome to Financial Modeler
     
     This application helps you build SBDC-style financial models with:
     - **Monthly or Annual** time periods

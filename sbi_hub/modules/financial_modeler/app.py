@@ -1,7 +1,7 @@
 """
 Financial Modeler module entry point for the SBI Hub shell.
 
-This module wraps the existing Operating Model application so it can be
+This module wraps the existing Financial Modeler application so it can be
 rendered inside the SBI Hub module router. Page configuration is owned by
 the hub shell (sbi_hub), so ``st.set_page_config`` is intentionally not
 called here. All application logic, screens, calculations, reports, and
@@ -65,7 +65,7 @@ def render():
     # Mark session as initialized (for autosave)
     st.session_state['session_initialized'] = True
 
-    st.sidebar.title("Operating Model")
+    st.sidebar.title("Financial Modeler")
 
     pages = {
         "🏠 Home": home,
