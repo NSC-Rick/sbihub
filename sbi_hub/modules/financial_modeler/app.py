@@ -10,6 +10,7 @@ workflows are preserved unchanged from the standalone deployment.
 import streamlit as st
 import streamlit.components.v1 as components
 from sbi_hub.modules.financial_modeler.ui import home, revenue_page, payroll_page, opex_page, financing_page, review_page, insights_page, modeler_page, optimizer_page
+from sbi_hub.modules.financial_modeler.comparison import workspace as comparison_workspace
 from sbi_hub.modules.financial_modeler.utils.session_manager import check_and_prompt_restore, autosave_session, has_unsaved_changes
 from sbi_hub.modules.financial_modeler.utils.custom_styles import apply_custom_styles
 from sbi_hub.modules.financial_modeler.components.elevenlabs_widget import render_elevenlabs_widget
@@ -65,6 +66,13 @@ def render():
     # Mark session as initialized (for autosave)
     st.session_state['session_initialized'] = True
 
+    # V2.1: Model Comparison workspace mode. Read-only with respect to the
+    # active model — all model session keys are preserved on return.
+    if st.session_state.get('fm_workspace') == 'comparison':
+        comparison_workspace.render()
+        render_elevenlabs_widget("agent_9601kwzaq0jsfrhb0xzvzaxa0hx0")
+        return
+
     st.sidebar.title("Financial Modeler")
 
     pages = {
@@ -89,6 +97,20 @@ def render():
         st.session_state.previous_page = selection
         st.session_state['_scroll_to_top'] = True
         # Trigger rerun to execute scroll-to-top component
+        st.rerun()
+
+    st.sidebar.divider()
+
+    # V2.1: entry point to the Model Comparison workspace
+    if st.sidebar.button(
+        "⚖️ Compare Models",
+        use_container_width=True,
+        help="Open the Model Comparison workspace to compare your current "
+             "model with a saved model, or two saved models. Your active "
+             "model is preserved.",
+    ):
+        st.session_state['fm_workspace'] = 'comparison'
+        st.session_state['_scroll_to_top'] = True
         st.rerun()
 
     st.sidebar.divider()
