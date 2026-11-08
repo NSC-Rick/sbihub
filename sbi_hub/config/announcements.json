@@ -7,6 +7,13 @@
     "pinned": true
   },
   {
+    "title": "Financial Modeler - Comparison Engine now running",
+    "description": "The Financial Modeler now has a comaprison feature! You can now compare the current model to a saved model or compare two saved models.",
+    "date": "2026-11-08",
+    "category": "Release",
+    "pinned": false
+  },
+  {
     "title": "Business Valuation Now Available",
     "description": "The Business Valuation & Succession module is live in PILOT mode. It opens in a new tab as its own application, independent of the hub. This module will be tested and upgraded as issues and enhancements are discovered.",
     "date": "2026-11-07",
